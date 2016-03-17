@@ -1,0 +1,51 @@
+version: '2'
+services:
+  jumpserver:
+    build: .
+    container_name: jumpserver
+    restart: always
+    volumes_from:
+      - jumpserver-data
+    ports:
+      - "8888:80"
+      - "2222:22"
+      - "3000:3000"
+    environment:
+      - MYSQL_HOST=jumpserver-db
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASS=love1314
+      - MYSQL_NAME=jumpserver
+      - MAIL_ENABLED=false
+      - "WEBSOCKT=192.168.64.5:3000"
+    links:
+      - jumpserver-db
+
+  jumpserver-data:
+    build: .
+    container_name: jumpserver-data
+    command: echo "jumpserver's data container"
+    volumes:
+      - /etc/passwd
+      - /etc/shadow
+      - /etc/group
+      - /home
+      - /jumpserver/keys
+      - /jumpserver/logs
+
+  jumpserver-db:
+    image: mysql:5.7
+    container_name: jumpserver-db
+    restart: always
+    volumes_from:
+      - jumpserver-db-data
+    environment:
+      - MYSQL_ROOT_PASSWORD=love1314
+      - MYSQL_DATABASE=jumpserver
+
+  jumpserver-db-data:
+    image: mysql:5.7
+    container_name: jumpserver-db-data
+    command: echo "jumpserver's data container"
+    volumes:
+      - /var/lib/mysql
