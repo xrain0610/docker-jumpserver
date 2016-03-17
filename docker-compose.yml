@@ -1,8 +1,7 @@
 version: '2'
 services:
   jumpserver:
-    #build: .
-    image: jumpserver
+    build: .
     container_name: jumpserver
     restart: always
     volumes_from:
@@ -23,7 +22,7 @@ services:
       - jumpserver-db
 
   jumpserver-data:
-    image: jumpserver
+    build: .
     container_name: jumpserver-data
     command: echo "jumpserver's data container"
     volumes:
