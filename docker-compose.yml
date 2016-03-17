@@ -1,7 +1,8 @@
 version: '2'
 services:
   jumpserver:
-    build: .
+    #build: .
+    image: jumpserver
     container_name: jumpserver
     restart: always
     volumes_from:
@@ -22,13 +23,11 @@ services:
       - jumpserver-db
 
   jumpserver-data:
-    build: .
+    image: jumpserver
     container_name: jumpserver-data
     command: echo "jumpserver's data container"
     volumes:
-      - /etc/passwd
-      - /etc/shadow
-      - /etc/group
+      - /etc
       - /home
       - /jumpserver/keys
       - /jumpserver/logs
@@ -37,6 +36,8 @@ services:
     image: mysql:5.7
     container_name: jumpserver-db
     restart: always
+    ports:
+      - 3306
     volumes_from:
       - jumpserver-db-data
     environment:
